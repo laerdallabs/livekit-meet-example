@@ -61,7 +61,7 @@ export default function ApiController() {
     } catch (error) {
       console.error('Connection error:', error);
     }
-  }
+  };
 
   const handleGetRoomDetails = async () => {
     try {
@@ -172,13 +172,15 @@ export default function ApiController() {
         <button onClick={handleStopReceive}>Stop Receive</button>
       </div>
       {roomDetails && (
-        <pre style={{
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '10px',
-          overflow: 'auto',
-          fontSize: '12px'
-        }}>
+        <pre
+          style={{
+            padding: '10px',
+            borderRadius: '4px',
+            marginBottom: '10px',
+            overflow: 'auto',
+            fontSize: '12px',
+          }}
+        >
           {JSON.stringify(roomDetails, null, 2)}
         </pre>
       )}
