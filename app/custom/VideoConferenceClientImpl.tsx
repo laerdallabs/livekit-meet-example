@@ -16,6 +16,7 @@ import { KeyboardShortcuts } from '@/lib/KeyboardShortcuts';
 import { SettingsMenu } from '@/lib/SettingsMenu';
 import { useSetupE2EE } from '@/lib/useSetupE2EE';
 import { useLowCPUOptimizer } from '@/lib/usePerfomanceOptimiser';
+import ApiControls from '@/app/ApiControls';
 
 export function VideoConferenceClientImpl(props: {
   liveKitUrl: string;
@@ -83,6 +84,7 @@ export function VideoConferenceClientImpl(props: {
     <div className="lk-room-container">
       <RoomContext.Provider value={room}>
         <KeyboardShortcuts />
+        <ApiControls />
         <VideoConference
           chatMessageFormatter={formatChatMessageLinks}
           SettingsComponent={
