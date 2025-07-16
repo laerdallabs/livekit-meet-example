@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 const apiUrl = 'http://localhost:3001/api';
 
-export default function ApiController() {
+export default function ApiControls() {
   const [roomDetails, setRoomDetails] = useState<any>(null);
+  const [clientCredentials, setClientCredentials] = useState<any>(null);
 
   const handleConnect = async () => {
     try {
@@ -159,6 +160,9 @@ export default function ApiController() {
       console.error('Stop receive error:', error);
     }
   };
+
+
+
 
   return (
     <div>

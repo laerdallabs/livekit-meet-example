@@ -1,10 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { encodePassphrase, generateRoomId, randomString } from '@/lib/client-utils';
 import styles from '../styles/Home.module.css';
-import ApiController from '@/app/ApiController';
+import ApiControls from '@/app/ApiControls';
+const apiUrl = 'http://localhost:3001/api';
 
 function Tabs(props: React.PropsWithChildren<{}>) {
   const searchParams = useSearchParams();
@@ -86,6 +87,35 @@ function DemoMeetingTab(props: { label: string }) {
 }
 
 function CustomConnectionTab(props: { label: string }) {
+  const [token, setToken] = useState('');
+  const [wssUrl, setWssUrl] = useState('');
+
+  const handleGetClientCredentials = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/client-token`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.log(`Failed to get client credentials ${response.status} ${response.statusText} ${response.body}`);
+        throw new Error('Failed to get client credentials');
+      }
+
+      const { token,wssUrl } = await response.json();
+      setToken(token);
+      setWssUrl(wssUrl);
+    } catch (error) {
+      console.error('Error getting client credentials:', error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetClientCredentials();
+  }, [])
+
   const router = useRouter();
 
   const [e2ee, setE2ee] = useState(false);
@@ -115,6 +145,7 @@ function CustomConnectionTab(props: { label: string }) {
         type="url"
         placeholder="LiveKit Server URL: wss://*.livekit.cloud"
         required
+        defaultValue={wssUrl}
       />
       <textarea
         id="token"
@@ -123,6 +154,7 @@ function CustomConnectionTab(props: { label: string }) {
         required
         rows={5}
         style={{ padding: '1px 2px', fontSize: 'inherit', lineHeight: 'inherit' }}
+        defaultValue={token}
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
@@ -184,7 +216,7 @@ export default function Page() {
             <DemoMeetingTab label="Demo" />
             <CustomConnectionTab label="Custom" />
           </Tabs>
-          <ApiController></ApiController>
+          <ApiControls></ApiControls>
         </Suspense>
       </main>
       <footer data-lk-theme="default">
